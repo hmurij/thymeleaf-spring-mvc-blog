@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{fragments/common :: head (~{::title})}">
+    <title>Post</title>
+</head>
+<body class="bg-light">
+<div th:replace="~{fragments/common :: header (#{post.page.header.heading})}"></div>
+
+<div id="content" class="container" style="padding-bottom: 66px;">
+    <div class="row row-cols-1">
+        <div th:replace="~{fragments/post :: post-full (${post})}"></div>
+    </div>
+
+    <h5 th:if="${post.comments.size() > 0} or ${#authentication.name} != 'anonymousUser'" class="mt-2">Comments</h5>
+
+    <div th:replace="~{fragments/post :: new-post-comment (${post})}"></div>
+
+    <div class="row row-cols-1 mt-1" th:each="comment : ${post.comments}">
+        <div th:replace="~{fragments/post :: post-comment (${comment})}"></div>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+<script type="text/javascript">
+    var resizeElement = document.getElementById("header");
+    var content = document.getElementById("content");
+    var resizeCallback = function () {
+        console.log("height: " + resizeElement.clientHeight);
+        content.style.paddingTop = resizeElement.clientHeight + 8 + "px";
+    };
+    addResizeListener(resizeElement, resizeCallback);
+    // removeResizeListener(resizeElement, resizeCallback);
+</script>
+<script>
+    document.querySelectorAll("textarea").forEach(element => {
+        function autoResize(el) {
+            el.style.height = el.scrollHeight + 'px';
+        }
+
+        autoResize(element);
+        element.addEventListener('input', () => autoResize(element));
+    });
+</script>
+</html>

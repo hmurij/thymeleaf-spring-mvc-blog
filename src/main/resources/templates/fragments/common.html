@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head (title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{/bootstrap/css/bootstrap.css}" th:rel="stylesheet">
+    <script th:src="@{/bootstrap/js/bootstrap.bundle.js}"></script>
+    <script type="text/javascript" th:src="@{/script/detect-element-resize.js}"></script>
+    <title th:replace="${title}"></title>
+</head>
+
+<body>
+
+
+<div id="header" th:fragment="header (header)" class="fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-light bg-white">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/main}">Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="btn btn-outline-secondary dropdown-toggle mt-2 me-1" href="#" id="navbarDropdown" role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false" th:text="#{navbar.language}">
+                            Languages
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" th:href="${#httpServletRequest.requestURI} + '?lang=en'"
+                                   th:text="#{navbar.english}">English</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" th:href="${#httpServletRequest.requestURI} + '?lang=lt'"
+                                   th:text="#{navbar.lithuanian}">Lithuanian</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item mt-2" sec:authorize="isAuthenticated()">
+                        <a class="btn btn-outline-secondary"
+                           th:href="@{/new-post}"
+                           th:text="#{navbar.addnewpost}">Add new post</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div class="btn me-1" style="cursor: default;" sec:authorize="isAuthenticated()">
+                        <span th:text="#{navbar.loggedas} + ', '"></span>
+                        <span sec:authentication="principal.username"></span>
+                    </div>
+                    <a class="btn btn-outline-secondary me-2"
+                       sec:authorize="!isAuthenticated()"
+                       th:href="@{/login}"
+                       th:text="#{navbar.button.login}">Login
+                    </a>
+                    <a class="btn btn-outline-secondary me-2"
+                       sec:authorize="isAuthenticated()"
+                       th:href="@{/logout}"
+                       th:text="#{navbar.button.logout}">Login
+                    </a>
+                    <a class="btn btn-outline-secondary"
+                       sec:authorize="!isAuthenticated()"
+                       th:href="@{/register}"
+                       th:text="#{navbar.button.register}">Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid p-3 bg-white border-bottom">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 class="text-center text-nowrap text-black-50" th:text="${header}"></h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="footer" class="container-fluid fixed-bottom bg-white border-top">
+    <div class="row">
+        <div class="col-sm-12">
+            <p class="text-center text-nowrap pt-3">&copy; 2022 MyCompany, Inc</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

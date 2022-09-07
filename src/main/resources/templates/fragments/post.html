@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<div th:fragment="post-thumbnail (post)" class="border rounded-1 bg-white p-2">
+    <a th:href="'post/' + ${post.id}"
+       class="text-decoration-none text-black">
+        <h3 class="mt-1" th:text="${post.title}">Post Title</h3>
+        <h6 class="d-flex">
+            <span class="me-auto" th:text="#{post.author} + ': ' + ${post.blogUser.userName}">Author user name</span>
+            <span class="me-2" th:text="#{post.postedOn} + ': ' + ${post.createdOn}">Posted on</span>
+            <span th:text="#{post.editedOn} + ': ' + ${post.updatedOn}">Edited on</span>
+        </h6>
+        <hr>
+        <p th:text="${post.content.substring(0, 200)} + ' . . .'">Post Content</p>
+    </a>
+</div>
+
+<div th:fragment="post-full (post)" class="border rounded-1 bg-white p-2">
+    <h4 class="mt-1" th:text="${post.title}">Post Title</h4>
+    <h6 class="d-flex">
+        <span class="me-auto" th:text="#{post.author} + ': ' + ${post.blogUser.userName}">Author user name</span>
+        <span class="me-2" th:text="#{post.postedOn} + ': ' + ${post.createdOn}">Posted on</span>
+        <span th:text="#{post.editedOn} + ': ' + ${post.updatedOn}">Edited on</span>
+    </h6>
+    <hr>
+    <textarea class="form-control bg-white" style="overflow:hidden" readonly
+              th:unless="(${#authentication.getName()} == ${post.blogUser.userName}) or ${#authentication.getName().equals('admin')}"
+              th:text="${post.content}">Post Content</textarea>
+    <form th:if="(${#authentication.getName()} == ${post.blogUser.userName}) or ${#authentication.getName().equals('admin')}"
+          method="post"
+          th:object="${post}"
+          th:action="@{/update-post}">
+        <input type="hidden" th:field="*{id}">
+        <textarea class="form-control bg-white" style="overflow:hidden"
+                  th:field="*{content}"
+                  th:text="${post.content}">Post Content</textarea>
+        <div class="d-flex justify-content-end mt-2">
+            <button type="submit" class="btn btn-outline-primary me-2">Update</button>
+            <a class="btn btn-outline-danger" th:href="'delete/' + *{id}">Delete</a>
+        </div>
+    </form>
+</div>
+
+<div th:fragment="post-comment (comment)" class="border rounded-1 bg-white p-2">
+    <h6 class="d-flex">
+        <span class="me-auto" th:text="#{post.author} + ': ' + ${comment.blogUser.userName}">Comment author user name</span>
+        <span class="me-2" th:text="#{post.commentedOn} + ': ' + ${comment.createdOn}">Commented on</span>
+    </h6>
+    <hr>
+    <textarea class="form-control bg-white"
+              style="overflow:hidden"
+              readonly
+              th:unless="(${#authentication.getName()} == ${comment.blogUser.userName}) or ${#authentication.getName().equals('admin')}"
+              th:text="${comment.comment}">Comment</textarea>
+    <form method="post"
+          th:if="(${#authentication.getName()} == ${comment.blogUser.userName}) or ${#authentication.getName().equals('admin')}"
+          th:object="${newComment}"
+          th:action="@{/update-comment}">
+
+        <input type="hidden"
+               th:value="${comment.id}"
+               th:attr="name='commentId'">
+        <textarea class="form-control bg-white"
+                  style="overflow:hidden"
+                  th:text="${comment.comment}"
+                  th:attr="name='comment'">Comment</textarea>
+        <div class="d-flex justify-content-end mt-2">
+            <button type="submit" class="btn btn-outline-primary me-2">Update</button>
+            <a class="btn btn-outline-danger" th:href="'delete-comment/' + ${comment.id}">Delete</a>
+        </div>
+    </form>
+</div>
+
+<div th:fragment="new-post-comment (post)">
+    <div class="row row-cols-1" sec:authorize="isAuthenticated()">
+        <div class="border rounded-1 bg-white p-2">
+            <form method="post"
+                  th:object="${newComment}"
+                  th:action="@{/new-comment}">
+                <div class="form-floating">
+                    <input type="hidden"
+                           th:value="${post.id}"
+                           th:attr="name='postId'">
+                    <textarea class="form-control"
+                              style="overflow:hidden"
+                              id="comment"
+                              th:field="*{comment}"
+                    ></textarea>
+                    <label for="comment">Add new comment</label>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-outline-primary mt-2">Add New Comment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

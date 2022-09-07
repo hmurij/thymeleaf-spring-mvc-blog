@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/common :: head (~{::title})}">
+    <title>Secured</title>
+</head>
+<body class="bg-light">
+<div th:replace="~{fragments/common :: header (${'Secured'})}"></div>
+
+<div id="content" class="container" style="padding-bottom: 66px;">
+    <div class="row row-cols-1">
+        <div class="col">
+            <div class="p-2 bg-white border rounded-1">
+                <div class="container">
+                    <div class="row" sec:authorize="isAuthenticated()">
+                        <div class="col-md-10 col-md-offset-2">
+                            <h2 class="p-1 bg-success text-white">
+                                Logged in as: <span sec:authentication="principal.username"></span>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="row" sec:authorize="!isAuthenticated()">
+                        <div class="col-md-10 col-md-offset-2">
+                            <h2 class="p-1 bg-danger text-white">User is Logged Out</h2>
+                        </div>
+                    </div>
+                    <div class="row" sec:authorize="hasAuthority('ADMIN')">
+                        <div class="col-md-10 col-md-offset-2">
+                            <h2>User Has Role: <span sec:authentication="principal.authorities"></span></h2>
+                        </div>
+                    </div>
+                    <div class="row" sec:authorize="hasAuthority('USER')">
+                        <div class="col-md-10 col-md-offset-2">
+                            <h2>User Has Role <span sec:authentication="principal.authorities"></span></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+<script type="text/javascript">
+    var resizeElement = document.getElementById("header");
+    var content = document.getElementById("content");
+    var resizeCallback = function () {
+        console.log("height: " + resizeElement.clientHeight);
+        content.style.paddingTop = resizeElement.clientHeight + 8 + "px";
+    };
+    addResizeListener(resizeElement, resizeCallback);
+    // removeResizeListener(resizeElement, resizeCallback);
+</script>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head (~{::title})}">
+    <title>Post</title>
+</head>
+<body class="bg-light">
+<div th:replace="~{fragments/common :: header (#{newuser.page.header.heading})}"></div>
+
+<div id="content" class="container" style="padding-bottom: 66px;">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
+        <form class="form-horizontal bg-white border p-3 rounded-1" method="post"
+              th:object="${newBlogUser}"
+              th:action="@{/register}">
+            <div class="col mb-3">
+                <label for="username" class="form-label">User Name</label>
+                <input type="text" class="form-control" id="username"
+                       th:field="*{username}"
+                       th:classappend="*{username != null} ? 'is-valid'"
+                       th:errorclass="is-invalid">
+                <ul class="invalid-feedback">
+                    <li th:each="err : ${#fields.errors('username')}" th:text="${err}"/>
+                </ul>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="text" class="form-control" id="email"
+                       th:field="*{email}"
+                       th:classappend="*{email != null} ? 'is-valid'"
+                       th:errorclass="is-invalid">
+                <ul class="invalid-feedback">
+                    <li th:each="err : ${#fields.errors('email')}" th:text="${err}"/>
+                </ul>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password"
+                       th:field="*{password}"
+                       th:classappend="*{password != null} ? 'is-valid'"
+                       th:errorclass="is-invalid">
+                <ul class="invalid-feedback">
+                    <li th:each="err : ${#fields.errors('password')}" th:text="${err}"/>
+                </ul>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+<script type="text/javascript">
+    var resizeElement = document.getElementById("header");
+    var content = document.getElementById("content");
+    var resizeCallback = function () {
+        console.log("height: " + resizeElement.clientHeight);
+        content.style.paddingTop = resizeElement.clientHeight + 8 + "px";
+    };
+    addResizeListener(resizeElement, resizeCallback);
+    // removeResizeListener(resizeElement, resizeCallback);
+</script>
+</html>

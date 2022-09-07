@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head (~{::title})}">
+    <title>Post</title>
+</head>
+<body class="bg-light">
+<div th:replace="~{fragments/common :: header (#{newpost.page.header.heading})}"></div>
+
+<div id="content" class="container" style="padding-bottom: 66px;">
+    <div class="row row-cols-1">
+        <form class="form-horizontal bg-white border p-3 rounded-1" method="post"
+              th:object="${newPost}"
+              th:action="@{/new-post}">
+            <h4 th:text="#{post.author} + ': ' + ${#authentication.name}"></h4>
+            <div class="col mb-3">
+                <label for="title" class="form-label"
+                >Title</label>
+                <input type="text" class="form-control" id="title"
+                       th:field="*{title}"
+                       th:classappend="*{title != null} ? 'is-valid'"
+                       th:errorclass="is-invalid">
+                <ul class="invalid-feedback">
+                    <li th:each="err : ${#fields.errors('title')}" th:text="${err}"/>
+                </ul>
+            </div>
+            <div class="mb-3">
+                <label for="postContent" class="form-label">Content</label>
+                <textarea class="form-control" id="postContent" rows="10"
+                          th:field="*{content}"
+                          th:classappend="*{content != null} ? 'is-valid'"
+                          th:errorclass="is-invalid"></textarea>
+                <ul class="invalid-feedback">
+                    <li th:each="err : ${#fields.errors('content')}" th:text="${err}"/>
+                </ul>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/common :: footer}"></div>
+</body>
+<script type="text/javascript">
+    var resizeElement = document.getElementById("header");
+    var content = document.getElementById("content");
+    var resizeCallback = function () {
+        console.log("height: " + resizeElement.clientHeight);
+        content.style.paddingTop = resizeElement.clientHeight + 8 + "px";
+    };
+    addResizeListener(resizeElement, resizeCallback);
+    // removeResizeListener(resizeElement, resizeCallback);
+</script>
+<script>
+    document.querySelectorAll("textarea").forEach(element => {
+        function autoResize(el) {
+            el.style.height = el.scrollHeight + 'px';
+        }
+
+        autoResize(element);
+        element.addEventListener('input', () => autoResize(element));
+    });
+</script>
+</html>
