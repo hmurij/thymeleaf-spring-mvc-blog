@@ -12,8 +12,14 @@ Thymeleaf Spring Boot Gradle project for demonstration and educational purposes.
 
 ### Installation
 
-Download source code as zip, unzip archive or `git clone https://github.com/hmurij/thymeleaf-spring-mvc-blog.git`.
-Navigate to project folder and run `gradlew bootRun` command.
+Download source code as zip, unzip archive or 
+```
+git clone https://github.com/hmurij/thymeleaf-spring-mvc-blog.git
+```
+Navigate to project folder and run 
+```
+gradlew bootRun
+```
 
 ### Access the application
 
