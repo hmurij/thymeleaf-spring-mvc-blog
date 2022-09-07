@@ -24,3 +24,6 @@ gradlew bootRun
 ### Access the application
 
 Access application on http://localhost:8080. 
+
+### Reference
+* [Sister project using React and Spring Boot REST API](https://github.com/hmurij/react-spring-boot-blog)
